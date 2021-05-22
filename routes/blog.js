@@ -9,13 +9,14 @@ const coreScripts = require('../controller/coreScripts');
 
 router.get('/', async (req, res) => {
     const blog = await Blog.find({}).lean()
-    res.render('index',  {
+    res.render('index', {
         title: 'Home page',
         active: 'main',
-        utils: coreScripts, 
+        utils: coreScripts,
         blog
     })
 })
+
 
 router.get('/create', (req, res) => {
     res.render('create', {
@@ -36,79 +37,42 @@ router.post('/create', async (req, res) => {
         description: req.body.description,
         date: new Date()
     })
-
     await blog.save();
-    res.redirect('/');
+
+    res.redirect('/create');
 })
+
 
 router.get('/:id', async (req, res) => {
     const id = req.params.id;
-    // const blog = Blog.find({ _id: id }).lean()
-    //     .then(data => {
-    //         res.send({data})
-    //         if(data._id === id){
-    //             res.send({
-    //                 message : "User was deleted successfully!"
-    //             })
-    //         }
-    //     })
-    //     .catch(err =>{
-    //         res.status(404).send({
-    //             message: "404 not found"
-    //         });
-    //     });
-        const blog = await Blog.find({ _id: id }).lean()
-        console.log(blog);
-        res.render('single-post',  {
-            title: 'single-post',
-            active: 'main',
-            utils: coreScripts, 
-            blog
-        })
-        
-        console.log(req);
-        console.log(res);
+    if (id.match(/^[0-9a-fA-F]{24}$/)) {
+        const post = await Blog.findById(id)
+        if (post !== null) {
+            res.render('single-post',  {
+                title: post.title,
+                active: 'main',
+                utils: coreScripts, 
+                post: post
+            });        
+        } else {
+            res.render('404', {
+                title: 'Error 404',
+                active: ''
+            });
+        }
+    } else {
+        res.render('404', {
+            title: 'Error 404',
+            active: ''
+        });
+        }
+});
 
-        //разобраться здесь
-        
-        // if (res = ) {
-        //     res.status(404).send({
-        //         message: "404 not found"
-        //         });
-        // }
-  });
+router.delete('/:id', async (req, res) => {
+    const id = req.params.id;
+    await Blog.findByIdAndDelete(id);
+    res.redirect('/');
+})
 
-// router.get('/id', controller.getById);
-
-// router.post('/', (req, res) => {
-//     const id = req.params.id;
-
-
-    //const id = `607f3096f959ea47243e293d`;
-
-    // Blog.findByIdAndDelete(id)
-    //     .then(data => {
-    //         if(!data){
-    //             res.status(404).send({ message : `Cannot Delete with id ${id}. Maybe id is wrong`})
-    //         }else{
-    //             res.send({
-    //                 message : "Post was deleted successfully!"
-    //             })
-    //         }
-    //     })
-    //     .catch(err =>{
-    //         res.status(500).send({
-    //             message: "Could not delete post with id=" + id
-    //         });
-    //     });
-
-    //Blog.findByIdAndDelete(id)
-
-    //await blog.remove();
-    //res.redirect('/');
-// })
-
-
-// router.delete('/:id', controller.delete);
 
 module.exports = router;

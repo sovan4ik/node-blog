@@ -33,7 +33,7 @@
                             <div class="grid-example col s12 m8">
                                 <a href="/<%= blog._id %>" class="waves-effect btn purple accent-1">Open</a>
                                 <a href="#" class="waves-effect btn teal accent-3">Rename</a>
-                                <form action="/" method="DELETE">
+                                <form action="/<%= blog._id %>?_method=DELETE" method="POST">
                                     <button type="submit" class="waves-effect btn red delete-post">Delete <%= blog._id %></button>
                                 </form>
                             </div>
