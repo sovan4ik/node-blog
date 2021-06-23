@@ -9,12 +9,12 @@
             <h1><%= title %> </h1>
             
             <div class="input-field">
-                <input type="text" name="title">
-                <label>Post title</label>
+                <input id="post_title" type="text" name="title">
+                <label for="post_title">Post title</label>
             </div>
-            <div class="input-field">
-                <input type="text" name="description">
-                <label>Description</label>
+            <div class="input-field ">
+                <textarea id="post_description" data-length="120" name="description" class="materialize-textarea"></textarea>
+                <label for="post_description">Description</label>
             </div>
             <div class="input-field">
                 <input type="hidden" name="date" value="<%- new Date().getTime(); %>">
@@ -22,6 +22,7 @@
             <button type="sumbit" class="btn">Create</button>
             </form>
     </div>
+    <%- include('./partials/footer'); %>
 </body>
 </html>
 
