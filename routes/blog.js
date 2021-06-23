@@ -3,8 +3,6 @@ const router = express.Router();
 
 var Blog = require('../models/Blog');
 
-const controller = require('../controller/controller');
-
 const coreScripts = require('../controller/coreScripts');
 
 router.get('/', async (req, res) => {
@@ -68,11 +66,73 @@ router.get('/:id', async (req, res) => {
         }
 });
 
+router.get('/edit/:id', async (req, res) => {
+    const id = req.params.id;
+    if (id.match(/^[0-9a-fA-F]{24}$/)) {
+        const post = await Blog.findById(id)
+        if (post !== null) {
+            res.render('edit-post',  {
+                title: post.title,
+                active: 'main',
+                utils: coreScripts, 
+                post: post
+            });        
+        } else {
+            res.render('404', {
+                title: 'Error 404',
+                active: ''
+            });
+        }
+    } else {
+        res.render('404', {
+            title: 'Error 404',
+            active: ''
+        });
+        }
+});
+
 router.delete('/:id', async (req, res) => {
     const id = req.params.id;
-    await Blog.findByIdAndDelete(id);
-    res.redirect('/');
+    if (id.match(/^[0-9a-fA-F]{24}$/)) {
+    await Blog.findByIdAndDelete(id)
+    .then(data => {
+        if(!data){
+            res.status(404).send({ message: `Cannot delete post with id: ${id}. Maybe id is wrong :/`})
+        }else{
+            // res.send({ message: "Post was deleted successfully!" })
+            res.redirect('/');
+        }
+    })
+    .catch(err => {
+        res.status(500).send({
+            message: "Could not delete post with id: " + id + err
+        });
+    });
+} else {
+    res.status(404).send({
+        message: `Error, ${id} not found`
+    })
+}
 })
 
+
+router.put('/edit/:id', async (req, res, next) => {
+    console.log('1', req.body);
+    const id = req.params.id;
+    await Blog.findByIdAndUpdate(id, req.body, { useFindAndModify: false})
+    .then(data => {
+        if (!data) {
+            res.status(404).send({ message: "not found"})
+        }else {
+            // res.send({ message: "updated"})
+            res.redirect('/' + id)
+        }
+    })
+    .catch(err => {
+        res.status(500).send({
+            message: "error" + err
+        })
+    })
+})
 
 module.exports = router;

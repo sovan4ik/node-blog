@@ -5,18 +5,8 @@
     <%- include('./partials/navbar'); %>
     <div class="container">
         <div class="row valign-wrapper">
-            <div class="col s8">
+            <div class="col s12">
                 <h1><%= title %></h1>
-            </div>
-            <div class="col s4">
-                <div class="input-field col s12">
-                    <select>
-                      <!-- <option value="" disabled selected>Сортировка</option> -->
-                      <option value="1">Сначала старые</option>
-                      <option value="2">Сначала новые</option>
-                    </select>
-                    <label>Materialize Select</label>
-                  </div>
             </div>
         </div>
         <% if (blog.length) { %>
@@ -26,16 +16,24 @@
                 <div class="row">                    
                     <div class="card blue-grey darken-1">
                         <div class="card-content white-text">
-                            <a href="/<%= blog._id %>" style="color: #ffffff !important;"><span class="card-title"><%= blog.title %></span></a>
+                            <a href="/<%= blog._id %>" style="color: #ffffff !important;"><span class="card-title" style="overflow-x: auto"><%= blog.title %></span></a>
                             <p><%= blog.description %></p>
                         </div>
                         <div class="row card-action">
                             <div class="grid-example col s12 m8">
-                                <a href="/<%= blog._id %>" class="waves-effect btn purple accent-1">Open</a>
-                                <a href="#" class="waves-effect btn teal accent-3">Rename</a>
-                                <form action="/<%= blog._id %>?_method=DELETE" method="POST">
-                                    <button type="submit" class="waves-effect btn red delete-post">Delete <%= blog._id %></button>
-                                </form>
+                                <div class="row">
+                                    <div class="col">
+                                        <a href="/<%= blog._id %>" class="waves-effect btn purple accent-1">Open</a>
+                                    </div>
+                                    <div class="col">
+                                        <a href="/edit/<%= blog._id %>" class="waves-effect btn teal accent-3">Edit</a>
+                                    </div>
+                                    <div class="col">
+                                        <form action="/<%= blog._id %>?_method=DELETE" method="POST">
+                                            <button type="submit" class="waves-effect btn red delete-post">Delete</button>
+                                        </form>
+                                    </div>
+                                </div>
                             </div>
                             <div class="grid-example col s12 m4">
                                 <a href="#" class="waves-effect btn red">Date: <%= utils.postTime(blog.date) %></a>
@@ -45,7 +43,7 @@
                 </div>
             <% }) %>
             
-        Всего записей: <%= blog.length %>
+        Total posts: <%= blog.length %>
         <% } else { %>
         <p>No articles!</p>
         <% } %>

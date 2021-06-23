@@ -22,7 +22,3 @@ exports.sortFromNewToOld = (value) => {
     value.sort((a, b) => b.date - a.date); 
       return value;
     }
-
-    // console.log("Sort New -> Old: ", sortFromNewToOld(arr));
-    // console.log("Sort Old -> New: ", sortFromOldToNew(arr1));
-    
